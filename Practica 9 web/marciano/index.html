@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>Marcianos</title>
+<meta charset="iso-8859-1"/>
+
+</head>
+<body style="margin: 0;padding: 0">
+
+  <canvas id="canvas" width="640" height="480">
+El navegador no soporta la etiqueta canvas de HTML5
+</canvas>
+<script type="text/javascript">
+
+const CREACION = 000;
+const PRECARGA = 100;
+const INICIO   = 200;
+
+//ESTADO INICIAL
+var estado = CREACION;
+
+//PARA LAS IMAGENES
+var imagenes  = new Array();
+
+//EL AREA DE DIBUJO
+var canvas = document.getElementById("canvas");
+var contexto = canvas.getContext("2d");
+
+//UN AUXILIAR PARA EL PINTADO
+var auxcanvas = document.createElement("canvas");
+auxcanvas.width=640;
+auxcanvas.height=480;
+var auxcontexto = auxcanvas.getContext("2d")
+
+
+var hiloNave = null;
+
+function cargarImagenes(){
+
+  imagenes["nave"] = new Image();
+  imagenes["nave"].name="nave";
+  imagenes["nave"].src= "imagenes/nave.png";
+}
+
+
+function NaveEspacial(x, y) {
+
+    this.x = x;
+    this.y = y;
+    this.velocidad = 10;
+    this.imagen;
+ 			
+    this.getX = function() {
+		return this.x;
+    };
+    this.getY = function() {
+		return this.y;
+    };
+    this.getVelocidad = function() {
+		return this.velocidad;
+    };
+
+    this.setX = function(x) {
+		this.x = x;
+    };
+    this.setY = function(y) {
+		this.y = y;
+    };
+    this.setVelocidad = function(velocidad) {
+		this.velocidad = velocidad;
+    };
+    this.setImagen = function(imagen) {
+		this.imagen = imagen;
+    };
+    this.dibujar = function(ctx) {
+
+         ctx.drawImage(imagenes["nave"],0,0,100,50,this.getX(),this.getY(),100,50);
+    };
+ }
+
+
+function actualizacion(){
+
+   auxcontexto.clearRect(0, 0, canvas.width, canvas.height);
+   contexto.clearRect(0, 0, canvas.width, canvas.height);
+   hiloNave.dibujar(auxcontexto);
+   contexto.drawImage(auxcanvas,0,0,auxcanvas.width,auxcanvas.height,0,0,canvas.width,canvas.height);
+   hiloNave.setX(hiloNave.getX()-3);
+   setTimeout(ejecutarMaquinadeEstados, 100);
+}
+
+function ejecutarMaquinadeEstados(){
+    var imagenesCargadas=true;
+    if (estado == CREACION) {
+        cargarImagenes();
+        estado = PRECARGA
+        setTimeout(ejecutarMaquinadeEstados, 100);
+        console.log("Estado: creacion");
+    } else {
+        if(estado==PRECARGA){
+
+            console.log("Estado: precarga");
+            for(var i=0;i<imagenes.length;i++)
+                if(imagenes[i].complete!=true)
+                    imagenesCargadas=false;                        
+            if(imagenesCargadas==true){
+                hiloNave = new NaveEspacial(200, 100,imagenes[0]);
+                estado = INICIO;
+            }
+            setTimeout(ejecutarMaquinadeEstados, 100);
+        }else{
+             if(estado==INICIO){
+                  console.log("Estado: inicio");
+                  actualizacion();
+                  
+             }
+        }
+    }
+
+}
+ejecutarMaquinadeEstados();
+</script>
+
+</body>
+</html>
+

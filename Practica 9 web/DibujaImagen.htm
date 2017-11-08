@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Circulo</title>
+</head>
+
+<body>
+    <p>Imagen original:</p>
+    <img id="img" src="zabivaka.jpg" alt="Mi imagen" width="350" height="400">
+    <p>Canvas donde se dibuja:</p>
+    <canvas id="canvas" width="400" height="410" style="border:1px solid #d3d3d3;"> El navegador no soporta canvas</canvas>
+    <p><button onclick="dibujar()"> Dar click!</button></p>
+    <script>
+        function dibujar() {
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        //se visualiza la imagen original
+        //var img = document.getElementById("img");
+        //se crea una nueva imagen distinta a la original
+        var img = new Image();
+        img.src = "zavivaja1.jpg";
+        //coordenada donde se va dibujar (x ,y )
+        ctx.drawImage(img ,10,5,400,400);
+        }
+    </script>
+</body>
+
+</html>
